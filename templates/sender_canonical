@@ -1,0 +1,6 @@
+# rewrite everything:
+# <%= @domain %> <%= @from_domain %>
+# /.*/    masqueraded@example.com
+/^(.*)@<%= @domain %>$/     <%= @from_user %>@<%= @from_domain %>
+/^(.*)@<%= @fqdn %>$/     <%= @from_user %>@<%= @from_domain %>
+/^(.*)@<%= @from_domain %>$/     <%= @from_user %>@<%= @from_domain %>

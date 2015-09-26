@@ -1,0 +1,3 @@
+<% if @smtp_endpoint_user and @smtp_endpoint_pass then -%>
+<%= @smtp_endpoint_address %>:<%= @smtp_endpoint_port %> <%= @smtp_endpoint_user %>:<%= @smtp_endpoint_pass %>
+<% end %>

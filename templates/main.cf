@@ -1,0 +1,121 @@
+### Managed by puppet
+
+queue_directory = /var/spool/postfix
+command_directory = /usr/sbin
+daemon_directory = /usr/libexec/postfix
+data_directory = /var/lib/postfix
+
+mail_owner = postfix
+
+# The myhostname parameter specifies the internet hostname of this
+# mail system. The default is to use the fully-qualified domain name
+# from gethostname(). $myhostname is used as a default value for many
+# other configuration parameters.
+<% if @from_domain then -%>
+myhostname = <%= @from_domain %>
+<% end %>
+
+inet_interfaces = localhost
+inet_protocols = all
+
+# The mydestination parameter specifies the list of domains that this
+# machine considers itself the final destination for.
+mydestination = localhost.$mydomain, localhost
+
+unknown_local_recipient_reject_code = 550
+
+# The relayhost parameter specifies the default host to send mail to
+# when no entry is matched in the optional transport(5) table. When
+# no relayhost is given, mail is routed directly to the destination.
+<% if @smtp_endpoint_address != '' then -%>
+<% if @smtp_endpoint_port != '' then -%>
+<% smtp_endpoint_port=":"+@smtp_endpoint_port -%>
+<% else %>
+<% smtp_endpoint_port="" -%>
+<% end %>
+relayhost = <%= @smtp_endpoint_address %><%= smtp_endpoint_port %>
+<% end %>
+
+# The alias_maps parameter specifies the list of alias databases used
+# by the local delivery agent. The default list is system dependent.
+alias_maps = hash:/etc/aliases
+
+# The alias_database parameter specifies the alias database(s) that
+# are built with "newaliases" or "sendmail -bi".  This is a separate
+# configuration parameter, because alias_maps (see above) may specify
+# tables that are not necessarily all under control by Postfix.
+alias_database = hash:/etc/aliases
+
+# The debug_peer_level parameter specifies the increment in verbose
+# logging level when an SMTP client or server host name or address
+# matches a pattern in the debug_peer_list parameter.
+debug_peer_level = 2
+
+# The debug_peer_list parameter specifies an optional list of domain
+# or network patterns, /file/name patterns or type:name tables. When
+# an SMTP client or server host name or address matches a pattern,
+# increase the verbose logging level by the amount specified in the
+# debug_peer_level parameter.
+#debug_peer_list = 127.0.0.1
+#debug_peer_list = some.domain
+
+# The debugger_command specifies the external command that is executed
+# when a Postfix daemon program is run with the -D option.
+debugger_command =
+         PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
+         ddd $daemon_directory/$process_name $process_id & sleep 5
+
+
+# sendmail_path: The full pathname of the Postfix sendmail command.
+# This is the Sendmail-compatible mail posting interface.
+sendmail_path = /usr/sbin/sendmail.postfix
+
+# newaliases_path: The full pathname of the Postfix newaliases command.
+# This is the Sendmail-compatible command to build alias databases.
+newaliases_path = /usr/bin/newaliases.postfix
+
+# mailq_path: The full pathname of the Postfix mailq command.  This
+# is the Sendmail-compatible mail queue listing command.
+mailq_path = /usr/bin/mailq.postfix
+
+# setgid_group: The group for mail submission and queue management
+# commands.  This must be a group name with a numerical group ID that
+# is not shared with other accounts, not even with the Postfix account.
+setgid_group = postdrop
+
+# html_directory: The location of the Postfix HTML documentation.
+html_directory = no
+
+# manpage_directory: The location of the Postfix on-line manual pages.
+manpage_directory = /usr/share/man
+
+<% if @smtp_endpoint_user and  @smtp_endpoint_user != '' and @smtp_endpoint_pass and @smtp_endpoint_pass != '' then -%>
+smtp_sasl_auth_enable = yes
+smtpd_sasl_path = smtpd
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+<% else -%>
+smtp_sasl_security_options = 
+<% end -%>
+
+<% if @forward_all_email_to and @forward_all_email_to != '' then -%>
+always_bcc = <%= @forward_all_email_to %>
+<% end -%>
+
+<% if @use_tls then -%>
+smtp_use_tls = yes
+smtp_tls_security_level = encrypt
+smtp_tls_note_starttls_offer = yes
+smtp_tls_CAfile = <%= @tls_ca_file %>
+tls_random_source = dev:/dev/urandom
+<% end -%>
+
+<% if @debug then -%>
+debug_peer_list = <%= @smtp_endpoint %>
+debug_peer_level = 3
+<% end -%>
+
+inet_protocols=ipv4
+inet_interfaces=127.0.0.1
+
+sender_canonical_maps = regexp:/etc/postfix/sender_canonical
