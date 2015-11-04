@@ -1,4 +1,5 @@
 # postfix #
+[![Build Status](https://travis-ci.org/cristifalcas/puppet-postfix.png?branch=master)](https://travis-ci.org/cristifalcas/puppet-postfix)
 
 This is the postfix module. Currently it is mostly used to set up the local machine as a relay
 that forwards all emails to a local smtp server.
