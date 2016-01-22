@@ -20,7 +20,7 @@ inet_protocols = all
 
 # The mydestination parameter specifies the list of domains that this
 # machine considers itself the final destination for.
-mydestination = localhost.$mydomain, localhost
+mydestination = localhost.$mydomain, localhost, localhost.localdomain, <%= @fqdn %>
 
 unknown_local_recipient_reject_code = 550
 
