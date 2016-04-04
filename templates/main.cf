@@ -12,7 +12,7 @@ mail_owner = postfix
 # from gethostname(). $myhostname is used as a default value for many
 # other configuration parameters.
 <% if @from_domain then -%>
-myhostname = <%= @from_domain %>
+myhostname = <%= @myhostname %>
 <% end %>
 
 inet_interfaces = localhost

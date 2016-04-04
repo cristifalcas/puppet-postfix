@@ -4,6 +4,7 @@ class postfix (
   $smtp_endpoint_port    = '25',
   $smtp_endpoint_user    = undef,
   $smtp_endpoint_pass    = undef,
+  $myhostname            = $::fqdn,
   $from_domain           = $::domain,
   $from_user             = 'donotreply',
   $forward_all_email_to  = undef,
