@@ -13,9 +13,9 @@ class postfix (
   $remove_other_mta      = false,
   $set_alternatives      = true,
 ) {
-  contain postfix::install
-  contain postfix::config
-  contain postfix::service
+  contain ::postfix::install
+  contain ::postfix::config
+  contain ::postfix::service
 
   Class['postfix::install'] ->
   Class['postfix::config'] ~>

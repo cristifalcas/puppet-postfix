@@ -8,6 +8,7 @@ describe 'postfix' do
         :osfamily => 'RedHat',
       }
     end
+    it { is_expected.to compile.with_all_deps }
     it { should contain_class('postfix') }
   end
 end
