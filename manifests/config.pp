@@ -11,7 +11,7 @@ class postfix::config {
   }
 
   if $postfix::use_tls {
-      $tls_ca_file = '/etc/ssl/certs/ca-bundle.trust.crt'
+    $tls_ca_file = '/etc/ssl/certs/ca-bundle.trust.crt'
   }
 
   # main config
